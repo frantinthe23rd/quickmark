@@ -9,15 +9,15 @@
   ],
   "win": {
     "target": [{ "target": "nsis", "arch": ["x64"] }],
-    "icon": "resources/icon.ico"
+    "icon": "assets/icons/icon.ico"
   },
   "mac": {
     "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }],
-    "icon": "resources/icon.icns"
+    "icon": "assets/icons/icon.icns"
   },
   "linux": {
     "target": ["AppImage", "deb"],
-    "icon": "resources/icons"
+    "icon": "assets/icons"
   },
   "nsis": {
     "oneClick": false,
@@ -26,8 +26,8 @@
     "createStartMenuShortcut": true
   },
   "fileAssociations": [
-    { "ext": "md", "name": "Markdown File", "role": "Editor", "icon": "resources/icon.ico" },
-    { "ext": "markdown", "name": "Markdown File", "role": "Editor", "icon": "resources/icon.ico" }
+    { "ext": "md", "name": "Markdown File", "role": "Editor", "icon": "assets/icons/icon.ico" },
+    { "ext": "markdown", "name": "Markdown File", "role": "Editor", "icon": "assets/icons/icon.ico" }
   ],
   "publish": [{ "provider": "github", "releaseType": "release" }]
 }
