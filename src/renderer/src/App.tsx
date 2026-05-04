@@ -41,9 +41,11 @@ function AppInner(): JSX.Element {
   const handleContentChange = useCallback((content: string) => {
     if (!activeTab) return
     updateContent(activeTab.id, content)
-    setSaveStatuses(s => ({ ...s, [activeTab.id]: 'saving' }))
-    if (autoSaveEnabled) {
-      scheduleAutoSave(activeTab.filePath, content, activeTab.id)
+    if (activeTab.filePath) {
+      setSaveStatuses(s => ({ ...s, [activeTab.id]: 'saving' }))
+      if (autoSaveEnabled) {
+        scheduleAutoSave(activeTab.filePath, content, activeTab.id)
+      }
     }
   }, [activeTab, updateContent, scheduleAutoSave, autoSaveEnabled])
 

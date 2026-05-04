@@ -1,4 +1,5 @@
 import { Menu, BrowserWindow, dialog, shell } from 'electron'
+import { is } from '@electron-toolkit/utils'
 import { getRecentFiles } from './store'
 
 let autoSaveEnabled = true
@@ -63,7 +64,7 @@ export function createMenu(): void {
       label: 'View',
       submenu: [
         { role: 'reload' },
-        { role: 'toggleDevTools' },
+        ...(is.dev ? [{ role: 'toggleDevTools' as const }] : []),
         { type: 'separator' },
         { role: 'resetZoom' },
         { role: 'zoomIn' },
