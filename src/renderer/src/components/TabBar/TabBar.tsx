@@ -16,9 +16,11 @@ export function TabBar({ tabs, activeTabId, onSelect, onClose, onNew }: TabBarPr
         <div
           key={tab.id}
           role="tab"
+          tabIndex={0}
           aria-selected={tab.id === activeTabId}
           className={`tab ${tab.id === activeTabId ? 'tab--active' : ''}`}
           onClick={() => onSelect(tab.id)}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(tab.id) } }}
           title={tab.filePath ?? 'Untitled'}
         >
           {tab.isDirty && <span className="tab__dirty" aria-label="unsaved" />}

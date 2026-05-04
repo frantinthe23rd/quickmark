@@ -16,8 +16,10 @@ interface StatusBarProps {
 }
 
 export function StatusBar({ content, saveStatus }: StatusBarProps): JSX.Element {
-  const words = useMemo(() => wordCount(content), [content])
-  const chars = useMemo(() => charCount(content), [content])
+  const { words, chars } = useMemo(
+    () => ({ words: wordCount(content), chars: charCount(content) }),
+    [content]
+  )
 
   return (
     <div className="status-bar">
