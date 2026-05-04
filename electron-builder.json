@@ -1,0 +1,33 @@
+{
+  "appId": "com.quickmark.app",
+  "productName": "QuickMark",
+  "directories": {
+    "output": "dist"
+  },
+  "files": [
+    "out/**/*"
+  ],
+  "win": {
+    "target": [{ "target": "nsis", "arch": ["x64"] }],
+    "icon": "resources/icon.ico"
+  },
+  "mac": {
+    "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }],
+    "icon": "resources/icon.icns"
+  },
+  "linux": {
+    "target": ["AppImage", "deb"],
+    "icon": "resources/icons"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
+  },
+  "fileAssociations": [
+    { "ext": "md", "name": "Markdown File", "role": "Editor", "icon": "resources/icon.ico" },
+    { "ext": "markdown", "name": "Markdown File", "role": "Editor", "icon": "resources/icon.ico" }
+  ],
+  "publish": [{ "provider": "github", "releaseType": "release" }]
+}
