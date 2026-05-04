@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Editor as TipTapEditor } from '@tiptap/react'
 import { ThemeProvider } from './context/ThemeContext'
 import { TabBar } from './components/TabBar/TabBar'
@@ -20,7 +20,7 @@ function AppInner(): JSX.Element {
   const [mode, setMode] = useState<EditorMode>('wysiwyg')
   const [saveStatuses, setSaveStatuses] = useState<Record<string, SaveStatus>>({})
   const [autoSaveEnabled, setAutoSaveEnabled] = useState(true)
-  const tiptapRef = useRef<TipTapEditor | null>(null)
+  const [tiptapEditor, setTiptapEditor] = useState<TipTapEditor | null>(null)
 
   const resolveStatus = (tabId: string): SaveStatus => {
     if (saveStatuses[tabId]) return saveStatuses[tabId]
@@ -58,12 +58,12 @@ function AppInner(): JSX.Element {
   }, [activeTab, saveFileAs])
 
   const handleExportPdf = useCallback(async () => {
-    if (tiptapRef.current) await window.api.exportPdf(tiptapRef.current.getHTML())
-  }, [])
+    if (tiptapEditor) await window.api.exportPdf(tiptapEditor.getHTML())
+  }, [tiptapEditor])
 
   const handleExportHtml = useCallback(async () => {
-    if (tiptapRef.current) await window.api.exportHtml(tiptapRef.current.getHTML())
-  }, [])
+    if (tiptapEditor) await window.api.exportHtml(tiptapEditor.getHTML())
+  }, [tiptapEditor])
 
   const toggleMode = useCallback(() => {
     setMode(m => m === 'wysiwyg' ? 'source' : 'wysiwyg')
@@ -105,7 +105,7 @@ function AppInner(): JSX.Element {
         onNew={newTab}
       />
       <Toolbar
-        editor={tiptapRef.current}
+        editor={tiptapEditor}
         mode={mode}
         onModeToggle={toggleMode}
       />
@@ -114,7 +114,7 @@ function AppInner(): JSX.Element {
           content={activeTab.content}
           onChange={handleContentChange}
           mode={mode}
-          editorRef={e => { tiptapRef.current = e }}
+          editorRef={setTiptapEditor}
         />
       )}
       <StatusBar

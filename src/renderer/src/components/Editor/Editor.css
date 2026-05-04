@@ -1,18 +1,16 @@
 .editor-container {
   flex: 1;
-  overflow: auto;
+  overflow-y: auto;
   background: var(--bg-base);
   display: flex;
   flex-direction: column;
-  padding: 24px 16px;
 }
 
 .wysiwyg-editor {
   max-width: 780px;
-  margin: 0 auto;
+  width: calc(100% - 32px);
+  margin: 24px auto;
   padding: 40px 32px;
-  min-height: calc(100% - 48px);
-  width: 100%;
   background: var(--bg-surface);
   border-radius: 2px;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
@@ -26,12 +24,6 @@
   line-height: 1.75;
   min-height: 200px;
   caret-color: var(--accent);
-}
-
-.wysiwyg-editor:focus-within {
-  outline: 2px solid var(--accent);
-  outline-offset: 0;
-  border-radius: 2px;
 }
 
 .wysiwyg-editor .ProseMirror h1 { font-size: 2em; font-weight: 700; color: var(--text-heading); margin: 0.67em 0; }
@@ -54,5 +46,4 @@
 
 .source-editor {
   flex: 1;
-  overflow: hidden;
 }
