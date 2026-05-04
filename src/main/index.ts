@@ -1,4 +1,4 @@
-import { app, BrowserWindow, nativeTheme } from 'electron'
+import { app, BrowserWindow, nativeTheme, Menu, MenuItem } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { registerIpcHandlers } from './ipc'
@@ -40,6 +40,44 @@ function createWindow(initialFile?: string): void {
 
   nativeTheme.on('updated', () => {
     mainWindow?.webContents.send('theme:changed', nativeTheme.shouldUseDarkColors)
+  })
+
+  mainWindow.webContents.on('context-menu', (_event, params) => {
+    const menu = new Menu()
+
+    // Spell-check suggestions
+    for (const suggestion of params.dictionarySuggestions) {
+      menu.append(new MenuItem({
+        label: suggestion,
+        click: () => mainWindow!.webContents.replaceMisspelling(suggestion)
+      }))
+    }
+
+    if (params.misspelledWord) {
+      menu.append(new MenuItem({ type: 'separator' }))
+      menu.append(new MenuItem({
+        label: 'Add to Dictionary',
+        click: () => mainWindow!.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord)
+      }))
+    }
+
+    // Separator before edit actions when spell items are present
+    if (params.dictionarySuggestions.length > 0 || params.misspelledWord) {
+      menu.append(new MenuItem({ type: 'separator' }))
+    }
+
+    // Standard edit actions — only show what's applicable
+    if (params.isEditable) {
+      if (params.editFlags.canCut) menu.append(new MenuItem({ label: 'Cut', role: 'cut' }))
+      if (params.editFlags.canCopy) menu.append(new MenuItem({ label: 'Copy', role: 'copy' }))
+      if (params.editFlags.canPaste) menu.append(new MenuItem({ label: 'Paste', role: 'paste' }))
+    } else if (params.editFlags.canCopy) {
+      menu.append(new MenuItem({ label: 'Copy', role: 'copy' }))
+    }
+
+    if (menu.items.length > 0) {
+      menu.popup({ window: mainWindow! })
+    }
   })
 
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {

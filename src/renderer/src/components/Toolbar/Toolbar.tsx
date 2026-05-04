@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Editor } from '@tiptap/react'
 import { EditorMode, ThemeOverride } from '../../types'
 import { useTheme } from '../../context/ThemeContext'
@@ -63,6 +64,13 @@ function Divider(): JSX.Element {
 }
 
 export function Toolbar({ editor, mode, onModeToggle }: ToolbarProps): JSX.Element {
+  const [, setTick] = useState(0)
+  useEffect(() => {
+    if (!editor) return
+    const sync = (): void => setTick(t => t + 1)
+    editor.on('transaction', sync)
+    return () => { editor.off('transaction', sync) }
+  }, [editor])
   const { override, setOverride } = useTheme()
   const wysiwyg = mode === 'wysiwyg'
   const disabled = !editor || !wysiwyg
