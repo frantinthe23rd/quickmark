@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useEffect } from 'react'
 import { Tab } from '../types'
 
 interface UseFileOptions {
@@ -7,7 +7,7 @@ interface UseFileOptions {
 }
 
 export interface UseFileApi {
-  scheduleAutoSave: (filePath: string | null, content: string, tabId?: string) => void
+  scheduleAutoSave: (filePath: string | null, content: string, tabId: string) => void
   openFile: () => Promise<void>
   openFilePath: (path: string) => Promise<void>
   saveFile: (tab: Tab) => Promise<void>
@@ -17,13 +17,20 @@ export interface UseFileApi {
 export function useFile({ openTab, markSaved }: UseFileOptions): UseFileApi {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [])
+
   const scheduleAutoSave = useCallback(
-    (filePath: string | null, content: string, tabId?: string) => {
+    (filePath: string | null, content: string, tabId: string) => {
       if (timerRef.current) clearTimeout(timerRef.current)
       if (!filePath) return
-      timerRef.current = setTimeout(async () => {
-        await window.api.saveFile(filePath, content)
-        if (tabId) markSaved(tabId, filePath)
+      timerRef.current = setTimeout(() => {
+        window.api.saveFile(filePath, content)
+          .then(() => { markSaved(tabId, filePath) })
+          .catch((err) => console.error('[useFile] Auto-save failed:', err))
       }, 2000)
     },
     [markSaved]
