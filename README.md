@@ -22,7 +22,7 @@ Grab the latest Windows installer from [Releases](../../releases).
 Requires [Node.js](https://nodejs.org) 20+.
 
 ```bash
-git clone https://github.com/jonmoseley3/quickmark.git
+git clone https://github.com/frantinthe23rd/quickmark.git
 cd quickmark
 npm install
 npm run dev
