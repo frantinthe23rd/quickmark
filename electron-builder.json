@@ -24,6 +24,7 @@
     "allowToChangeInstallationDirectory": true,
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
+    "license": "build/license.txt",
     "include": "build/installer.nsh"
   },
   "publish": [{ "provider": "github", "releaseType": "release" }]
