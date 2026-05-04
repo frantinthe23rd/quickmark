@@ -1,0 +1,17 @@
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 14px;
+  background: var(--bg-statusbar);
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.status-bar__save--saved   { color: var(--saved-color); }
+.status-bar__save--saving  { color: var(--text-secondary); }
+.status-bar__save--modified,
+.status-bar__save--unsaved { color: var(--dirty-dot); }
