@@ -52,6 +52,7 @@ describe('useTabs', () => {
     act(() => result.current.closeTab(firstId))
     expect(result.current.tabs).toHaveLength(1)
     expect(result.current.tabs[0].filePath).toBe('/a.md')
+    expect(result.current.activeTabId).toBe(result.current.tabs[0].id)
   })
 
   it('closing the last tab replaces it with a fresh untitled tab', () => {

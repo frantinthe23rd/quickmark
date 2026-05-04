@@ -4,7 +4,7 @@ import { Tab } from '../types'
 
 function getTitle(filePath: string | null): string {
   if (!filePath) return 'Untitled'
-  return filePath.replace(/\\/g, '/').split('/').pop() ?? 'Untitled'
+  return filePath.replace(/\\/g, '/').split('/').pop() || 'Untitled'
 }
 
 function freshTab(): Tab {
@@ -55,6 +55,7 @@ export function useTabs(): TabsApi {
 
   const closeTab = useCallback((id: string) => {
     setTabs(prev => {
+      if (!prev.some(t => t.id === id)) return prev
       if (prev.length === 1) {
         const replacement = freshTab()
         setActiveTabId(replacement.id)
