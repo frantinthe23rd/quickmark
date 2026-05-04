@@ -1,6 +1,7 @@
-import { Menu, BrowserWindow, dialog, shell } from 'electron'
+import { Menu, BrowserWindow, dialog, shell, MenuItem } from 'electron'
 import { is } from '@electron-toolkit/utils'
 import { getRecentFiles } from './store'
+import { checkForUpdates } from './updater'
 
 let autoSaveEnabled = true
 
@@ -76,6 +77,11 @@ export function createMenu(): void {
     {
       label: 'Help',
       submenu: [
+        {
+          label: 'Check for Updates…',
+          click: (_item, _win, _event, menuItem: MenuItem) => checkForUpdates(menuItem)
+        },
+        { type: 'separator' },
         {
           label: 'About QuickMark',
           click: async () => {

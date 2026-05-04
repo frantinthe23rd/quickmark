@@ -1,6 +1,6 @@
 {
   "name": "quickmark",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Lightweight WYSIWYG markdown editor",
   "main": "./out/main/index.js",
   "private": true,
@@ -24,6 +24,7 @@
     "@tiptap/react": "^2.11.7",
     "@tiptap/starter-kit": "^2.11.7",
     "codemirror": "^6.0.1",
+    "electron-updater": "^6.8.3",
     "tiptap-markdown": "^0.8.10",
     "uuid": "^11.1.0"
   },

@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { registerIpcHandlers } from './ipc'
 import { createMenu } from './menu'
+import { initAutoUpdater } from './updater'
 
 if (!app.requestSingleInstanceLock()) {
   app.quit()
@@ -101,6 +102,7 @@ app.whenReady().then(() => {
   createWindow(initialFile)
   registerIpcHandlers()
   createMenu()
+  initAutoUpdater()
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
