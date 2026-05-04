@@ -3,6 +3,19 @@ import { useEditor, EditorContent, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import { Markdown } from 'tiptap-markdown'
+import { Extension } from '@tiptap/core'
+
+const KeyboardOverrides = Extension.create({
+  name: 'keyboardOverrides',
+  priority: 200,
+  addKeyboardShortcuts() {
+    return {
+      'Mod-Shift-s': () => true,
+      Tab: () => this.editor.commands.sinkListItem('listItem'),
+      'Shift-Tab': () => this.editor.commands.liftListItem('listItem'),
+    }
+  }
+})
 
 interface WysiwygEditorProps {
   content: string
@@ -14,6 +27,7 @@ export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorPro
   const editor = useEditor({
     extensions: [
       StarterKit,
+      KeyboardOverrides,
       Link.configure({ openOnClick: false }),
       Markdown.configure({ html: false, transformCopiedText: true })
     ],

@@ -30,12 +30,14 @@ const api = {
     ipcRenderer.invoke('theme:set', override),
 
   onMenuAction: (callback: (action: string, payload?: string) => void): (() => void) => {
-    const actions = ['new', 'open', 'save', 'saveAs', 'exportPdf', 'exportHtml']
+    const actions = ['new', 'open', 'save', 'saveAs', 'exportPdf', 'exportHtml', 'print']
     actions.forEach(action => ipcRenderer.on(`menu:${action}`, () => callback(action)))
     ipcRenderer.on('menu:openPath', (_, path: string) => callback('openPath', path))
+    ipcRenderer.on('menu:toggleAutoSave', (_, enabled: boolean) => callback('toggleAutoSave', String(enabled)))
     return () => {
       actions.forEach(action => ipcRenderer.removeAllListeners(`menu:${action}`))
       ipcRenderer.removeAllListeners('menu:openPath')
+      ipcRenderer.removeAllListeners('menu:toggleAutoSave')
     }
   },
 

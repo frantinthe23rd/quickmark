@@ -19,6 +19,7 @@ function AppInner(): JSX.Element {
 
   const [mode, setMode] = useState<EditorMode>('wysiwyg')
   const [saveStatuses, setSaveStatuses] = useState<Record<string, SaveStatus>>({})
+  const [autoSaveEnabled, setAutoSaveEnabled] = useState(true)
   const tiptapRef = useRef<TipTapEditor | null>(null)
 
   const resolveStatus = (tabId: string): SaveStatus => {
@@ -41,8 +42,10 @@ function AppInner(): JSX.Element {
     if (!activeTab) return
     updateContent(activeTab.id, content)
     setSaveStatuses(s => ({ ...s, [activeTab.id]: 'saving' }))
-    scheduleAutoSave(activeTab.filePath, content, activeTab.id)
-  }, [activeTab, updateContent, scheduleAutoSave])
+    if (autoSaveEnabled) {
+      scheduleAutoSave(activeTab.filePath, content, activeTab.id)
+    }
+  }, [activeTab, updateContent, scheduleAutoSave, autoSaveEnabled])
 
   const handleSave = useCallback(async () => {
     if (!activeTab) return
@@ -75,6 +78,8 @@ function AppInner(): JSX.Element {
       else if (action === 'saveAs') await handleSaveAs()
       else if (action === 'exportPdf') await handleExportPdf()
       else if (action === 'exportHtml') await handleExportHtml()
+      else if (action === 'print') window.print()
+      else if (action === 'toggleAutoSave') setAutoSaveEnabled(payload === 'true')
     })
     return cleanup
   }, [newTab, openFile, openFilePath, handleSave, handleSaveAs, handleExportPdf, handleExportHtml])

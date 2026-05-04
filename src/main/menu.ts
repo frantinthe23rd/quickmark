@@ -1,5 +1,7 @@
-import { Menu, BrowserWindow } from 'electron'
+import { Menu, BrowserWindow, dialog, shell } from 'electron'
 import { getRecentFiles } from './store'
+
+let autoSaveEnabled = true
 
 function send(channel: string, payload?: string): void {
   BrowserWindow.getFocusedWindow()?.webContents.send(channel, payload)
@@ -16,6 +18,8 @@ export function createMenu(): void {
         { label: 'Save As…', accelerator: 'CmdOrCtrl+Shift+S', click: () => send('menu:saveAs') },
         { type: 'separator' },
         { label: 'Recent Files', submenu: buildRecentMenu() },
+        { type: 'separator' },
+        { label: 'Print…', accelerator: 'CmdOrCtrl+P', click: () => send('menu:print') },
         { type: 'separator' },
         { label: 'Export as PDF', click: () => send('menu:exportPdf') },
         { label: 'Export as HTML', click: () => send('menu:exportHtml') },
@@ -42,6 +46,16 @@ export function createMenu(): void {
             BrowserWindow.getFocusedWindow()
               ?.webContents.session.setSpellCheckerEnabled(item.checked)
           }
+        },
+        { type: 'separator' },
+        {
+          label: 'Auto Save',
+          type: 'checkbox',
+          checked: autoSaveEnabled,
+          click: (item) => {
+            autoSaveEnabled = item.checked
+            BrowserWindow.getFocusedWindow()?.webContents.send('menu:toggleAutoSave', item.checked)
+          }
         }
       ]
     },
@@ -56,6 +70,28 @@ export function createMenu(): void {
         { role: 'zoomOut' },
         { type: 'separator' },
         { role: 'togglefullscreen' }
+      ]
+    },
+    {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'About QuickMark',
+          click: async () => {
+            const win = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0]
+            await dialog.showMessageBox(win, {
+              title: 'About QuickMark',
+              message: 'QuickMark 1.0.0',
+              detail: 'A lightweight WYSIWYG markdown editor.\n\nBuilt with Electron, React, and TipTap.',
+              buttons: ['OK'],
+              type: 'info'
+            })
+          }
+        },
+        {
+          label: 'View on GitHub',
+          click: () => shell.openExternal('https://github.com/quickmark/quickmark')
+        }
       ]
     }
   ]

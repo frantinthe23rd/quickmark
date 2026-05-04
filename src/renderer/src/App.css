@@ -13,3 +13,25 @@ html, body, #root {
   color: var(--text-primary);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
+@media print {
+  .tab-bar,
+  .toolbar,
+  .status-bar { display: none !important; }
+
+  .editor-container {
+    overflow: visible !important;
+    height: auto !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .wysiwyg-editor {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    min-height: 0 !important;
+  }
+}

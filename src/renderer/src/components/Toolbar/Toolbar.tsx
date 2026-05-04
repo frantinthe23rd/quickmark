@@ -32,7 +32,9 @@ const HEADINGS: FormatAction[] = ([1, 2, 3] as const).map(level => ({
 const BLOCKS: FormatAction[] = [
   { label: '≡', title: 'Bullet list', action: e => e.chain().focus().toggleBulletList().run(), isActive: e => e.isActive('bulletList') },
   { label: '1≡', title: 'Ordered list', action: e => e.chain().focus().toggleOrderedList().run(), isActive: e => e.isActive('orderedList') },
-  { label: '"', title: 'Blockquote', action: e => e.chain().focus().toggleBlockquote().run(), isActive: e => e.isActive('blockquote') }
+  { label: '"', title: 'Blockquote', action: e => e.chain().focus().toggleBlockquote().run(), isActive: e => e.isActive('blockquote') },
+  { label: '→', title: 'Indent list item (Tab)', action: e => e.chain().focus().sinkListItem('listItem').run() },
+  { label: '←', title: 'Outdent list item (Shift+Tab)', action: e => e.chain().focus().liftListItem('listItem').run() }
 ]
 
 const INSERTS: FormatAction[] = [
