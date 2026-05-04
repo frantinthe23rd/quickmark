@@ -88,7 +88,7 @@ export function createMenu(): void {
             const win = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0]
             await dialog.showMessageBox(win, {
               title: 'About QuickMark',
-              message: 'QuickMark 1.0.0',
+              message: 'QuickMark 1.0.3',
               detail: 'A lightweight WYSIWYG markdown editor.\n\nBuilt with Electron, React, and TipTap.',
               buttons: ['OK'],
               type: 'info'
