@@ -17,6 +17,10 @@ describe('wordCount', () => {
   it('handles multiple blank lines', () => {
     expect(wordCount('one\n\n\ntwo')).toBe(2)
   })
+
+  it('strips inline code markers but counts the words inside', () => {
+    expect(wordCount('a `b` c')).toBe(3)
+  })
 })
 
 describe('charCount', () => {

@@ -14,7 +14,7 @@ function stripMarkdown(md: string): string {
     .replace(/\*\*(.+?)\*\*/g, '$1')
     .replace(/\*(.+?)\*/g, '$1')
     .replace(/~~(.+?)~~/g, '$1')
-    .replace(/`{1,3}[^`\n]+`{1,3}/g, '')
+    .replace(/`{1,3}([^`\n]+)`{1,3}/g, '$1')
     .replace(/\[(.+?)\]\(.+?\)/g, '$1')
     .replace(/^[-*+]\s+/gm, '')
     .replace(/^\d+\.\s+/gm, '')
