@@ -34,7 +34,8 @@ export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorPro
     if (current !== content) {
       editor.commands.setContent(content)
     }
-  }, [content]) // only re-sync when content changes externally (tab switch)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- editor dep intentionally omitted: adding it fires on init, not just tab switch
+  }, [content])
 
   return (
     <div className="wysiwyg-editor">
