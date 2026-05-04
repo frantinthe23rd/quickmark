@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react'
 import { ThemeOverride } from '../types'
 
 interface ThemeContextValue {
@@ -18,9 +18,11 @@ export function ThemeProvider({ children }: { children: ReactNode }): JSX.Elemen
   const [override, setOverrideState] = useState<ThemeOverride>('system')
 
   useEffect(() => {
+    let mounted = true
     window.api.getTheme().then(({ isDark: d, override: o }) => {
+      if (!mounted) return
       setIsDark(d)
-      setOverrideState(o as ThemeOverride)
+      setOverrideState(o)
       document.documentElement.setAttribute('data-theme', d ? 'dark' : 'light')
     })
 
@@ -29,15 +31,18 @@ export function ThemeProvider({ children }: { children: ReactNode }): JSX.Elemen
       document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
     })
 
-    return cleanup
+    return () => {
+      mounted = false
+      cleanup()
+    }
   }, [])
 
-  const setOverride = async (o: ThemeOverride): Promise<void> => {
+  const setOverride = useCallback(async (o: ThemeOverride): Promise<void> => {
     const dark = await window.api.setTheme(o)
     setIsDark(dark)
     setOverrideState(o)
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
-  }
+  }, [])
 
   return (
     <ThemeContext.Provider value={{ isDark, override, setOverride }}>
