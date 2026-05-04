@@ -1,6 +1,6 @@
 {
   "name": "quickmark",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Lightweight WYSIWYG markdown editor",
   "main": "./out/main/index.js",
   "private": true,
