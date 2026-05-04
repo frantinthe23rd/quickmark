@@ -1,6 +1,7 @@
 import { ipcMain, dialog, BrowserWindow, nativeTheme } from 'electron'
 import { readFileSync, writeFileSync } from 'fs'
 import { addRecentFile, getRecentFiles, getThemeOverride, setThemeOverride } from './store'
+import { createMenu } from './menu'
 
 export function registerIpcHandlers(): void {
   ipcMain.handle('file:open', async () => {
@@ -14,6 +15,7 @@ export function registerIpcHandlers(): void {
     const path = filePaths[0]
     const content = readFileSync(path, 'utf-8')
     addRecentFile(path)
+    createMenu()
     return { path, content }
   })
 
@@ -28,7 +30,12 @@ export function registerIpcHandlers(): void {
   })
 
   ipcMain.handle('file:save', (_event, { path, content }: { path: string; content: string }) => {
-    writeFileSync(path, content, 'utf-8')
+    try {
+      writeFileSync(path, content, 'utf-8')
+    } catch (err) {
+      console.error('Save failed:', err)
+      throw err
+    }
   })
 
   ipcMain.handle('file:saveAs', async (_event, content: string) => {
@@ -39,14 +46,20 @@ export function registerIpcHandlers(): void {
       defaultPath: 'untitled.md'
     })
     if (canceled || !filePath) return null
-    writeFileSync(filePath, content, 'utf-8')
+    try {
+      writeFileSync(filePath, content, 'utf-8')
+    } catch (err) {
+      console.error('Save As failed:', err)
+      throw err
+    }
     addRecentFile(filePath)
+    createMenu()
     return filePath
   })
 
   ipcMain.handle('file:getRecent', () => getRecentFiles())
 
-  ipcMain.handle('export:pdf', async (_event, _html: string) => {
+  ipcMain.handle('export:pdf', async (_event, html: string) => {
     const win = BrowserWindow.getFocusedWindow()
     if (!win) return
     const { canceled, filePath } = await dialog.showSaveDialog(win, {
@@ -54,8 +67,15 @@ export function registerIpcHandlers(): void {
       defaultPath: 'export.pdf'
     })
     if (canceled || !filePath) return
-    const pdfData = await win.webContents.printToPDF({ printBackground: true })
-    writeFileSync(filePath, pdfData)
+    try {
+      const offscreen = new BrowserWindow({ show: false, webPreferences: { javascript: false } })
+      await offscreen.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`)
+      const pdfData = await offscreen.webContents.printToPDF({ printBackground: true })
+      offscreen.close()
+      writeFileSync(filePath, pdfData)
+    } catch (err) {
+      console.error('PDF export failed:', err)
+    }
   })
 
   ipcMain.handle('export:html', async (_event, html: string) => {

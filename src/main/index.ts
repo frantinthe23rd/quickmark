@@ -6,6 +6,7 @@ import { createMenu } from './menu'
 
 if (!app.requestSingleInstanceLock()) {
   app.quit()
+  process.exit(0)
 }
 
 let mainWindow: BrowserWindow | null = null

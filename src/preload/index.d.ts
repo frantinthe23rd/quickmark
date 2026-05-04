@@ -11,7 +11,7 @@ declare global {
       getRecentFiles: () => Promise<string[]>
       exportPdf: (html: string) => Promise<void>
       exportHtml: (html: string) => Promise<void>
-      getTheme: () => Promise<{ isDark: boolean; override: string }>
+      getTheme: () => Promise<{ isDark: boolean; override: 'system' | 'light' | 'dark' }>
       setTheme: (override: 'system' | 'light' | 'dark') => Promise<boolean>
       onMenuAction: (callback: (action: string, payload?: string) => void) => () => void
       onThemeChange: (callback: (isDark: boolean) => void) => () => void

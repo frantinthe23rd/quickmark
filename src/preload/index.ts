@@ -23,7 +23,7 @@ const api = {
   exportHtml: (html: string): Promise<void> =>
     ipcRenderer.invoke('export:html', html),
 
-  getTheme: (): Promise<{ isDark: boolean; override: string }> =>
+  getTheme: (): Promise<{ isDark: boolean; override: 'system' | 'light' | 'dark' }> =>
     ipcRenderer.invoke('theme:get'),
 
   setTheme: (override: 'system' | 'light' | 'dark'): Promise<boolean> =>
