@@ -91,7 +91,7 @@ export function createMenu(): void {
         },
         {
           label: 'View on GitHub',
-          click: () => shell.openExternal('https://github.com/quickmark/quickmark')
+          click: () => shell.openExternal('https://github.com/frantinthe23rd/quickmark')
         }
       ]
     }
