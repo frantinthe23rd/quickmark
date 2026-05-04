@@ -27,3 +27,12 @@ jobs:
         run: npm run build:win
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload unversioned installer for latest-download redirect
+        shell: pwsh
+        run: |
+          $versioned = Get-ChildItem dist\*.exe | Where-Object { $_.Name -notlike '*.blockmap' } | Select-Object -First 1
+          Copy-Item $versioned.FullName dist\QuickMark-Setup.exe
+          gh release upload $env:GITHUB_REF_NAME dist\QuickMark-Setup.exe --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
