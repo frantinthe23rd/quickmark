@@ -1,0 +1,47 @@
+.editor-container {
+  flex: 1;
+  overflow: auto;
+  background: var(--bg-surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.wysiwyg-editor {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 40px 32px;
+  min-height: 100%;
+  width: 100%;
+}
+
+.wysiwyg-editor .ProseMirror {
+  outline: none;
+  color: var(--text-primary);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 16px;
+  line-height: 1.75;
+  min-height: 200px;
+}
+
+.wysiwyg-editor .ProseMirror h1 { font-size: 2em; font-weight: 700; color: var(--text-heading); margin: 0.67em 0; }
+.wysiwyg-editor .ProseMirror h2 { font-size: 1.5em; font-weight: 600; color: var(--text-heading); border-bottom: 1px solid var(--border); padding-bottom: 0.3em; margin: 0.83em 0; }
+.wysiwyg-editor .ProseMirror h3 { font-size: 1.17em; font-weight: 600; color: var(--text-heading); }
+.wysiwyg-editor .ProseMirror a { color: var(--text-link); }
+.wysiwyg-editor .ProseMirror code { background: var(--bg-code); color: var(--text-code); padding: 2px 6px; border-radius: 3px; font-family: ui-monospace, monospace; font-size: 0.9em; }
+.wysiwyg-editor .ProseMirror pre { background: var(--bg-code); padding: 16px; border-radius: 6px; overflow: auto; }
+.wysiwyg-editor .ProseMirror pre code { background: none; padding: 0; color: var(--text-primary); }
+.wysiwyg-editor .ProseMirror blockquote { border-left: 4px solid var(--accent); margin: 0; padding-left: 16px; color: var(--text-secondary); font-style: italic; }
+.wysiwyg-editor .ProseMirror ul, .wysiwyg-editor .ProseMirror ol { padding-left: 24px; }
+.wysiwyg-editor .ProseMirror hr { border: none; border-top: 2px solid var(--border); margin: 24px 0; }
+.wysiwyg-editor .ProseMirror p.is-empty:first-child::before {
+  content: 'Start writing\2026';
+  color: var(--text-secondary);
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+.source-editor {
+  flex: 1;
+  overflow: hidden;
+}
