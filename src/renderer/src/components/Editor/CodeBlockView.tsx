@@ -46,10 +46,10 @@ export function CodeBlockView({ node }: NodeViewProps): JSX.Element {
       <NodeViewWrapper>
         <div className="mermaid-block">
           <MermaidDiagram code={node.textContent} />
-          <button className="mermaid-edit-btn" onClick={() => setIsEditing(true)}>Edit</button>
+          <button className="mermaid-edit-btn" onClick={(e) => { e.stopPropagation(); setIsEditing(true) }}>Edit</button>
         </div>
         {/* NodeViewContent must be rendered for TipTap — hidden visually, not display:none */}
-        <div style={{ position: 'absolute', opacity: 0, height: 0, overflow: 'hidden' }}>
+        <div aria-hidden="true" tabIndex={-1} style={{ position: 'absolute', opacity: 0, width: 0, height: 0, overflow: 'hidden' }}>
           <NodeViewContent as="code" />
         </div>
       </NodeViewWrapper>
@@ -62,7 +62,7 @@ export function CodeBlockView({ node }: NodeViewProps): JSX.Element {
         <NodeViewContent as="code" className={language ? `language-${language}` : undefined} />
       </pre>
       {isMermaid && (
-        <button className="mermaid-done-btn" onClick={() => setIsEditing(false)}>Done</button>
+        <button className="mermaid-done-btn" onClick={(e) => { e.stopPropagation(); setIsEditing(false) }}>Done</button>
       )}
     </NodeViewWrapper>
   )
