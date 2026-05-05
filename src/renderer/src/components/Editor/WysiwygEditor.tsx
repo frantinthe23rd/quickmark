@@ -4,7 +4,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { all, createLowlight } from 'lowlight'
-import { Markdown } from 'tiptap-markdown'
+import { Markdown, type MarkdownStorage } from 'tiptap-markdown'
 import { Extension } from '@tiptap/core'
 import { CodeBlockView } from './CodeBlockView'
 import 'highlight.js/styles/github-dark.css'
@@ -36,7 +36,7 @@ interface WysiwygEditorProps {
 export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorProps): React.JSX.Element {
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ codeBlock: false }),
+      StarterKit.configure({ codeBlock: false, link: false }),
       KeyboardOverrides,
       EnhancedCodeBlock,
       Link.configure({ openOnClick: false }),
@@ -44,7 +44,7 @@ export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorPro
     ],
     content,
     onUpdate({ editor }) {
-      onChange(editor.storage.markdown.getMarkdown())
+      onChange((editor.storage as unknown as { markdown: MarkdownStorage }).markdown.getMarkdown())
     }
   })
 
@@ -55,7 +55,7 @@ export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorPro
 
   useEffect(() => {
     if (!editor) return
-    const current = editor.storage.markdown.getMarkdown()
+    const current = (editor.storage as unknown as { markdown: MarkdownStorage }).markdown.getMarkdown()
     if (current !== content) {
       editor.commands.setContent(content)
     }

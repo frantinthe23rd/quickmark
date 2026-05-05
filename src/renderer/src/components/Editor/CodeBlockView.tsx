@@ -50,7 +50,7 @@ export function CodeBlockView({ node }: NodeViewProps): React.JSX.Element {
         </div>
         {/* NodeViewContent must be rendered for TipTap — hidden visually, not display:none */}
         <div aria-hidden="true" tabIndex={-1} style={{ position: 'absolute', opacity: 0, width: 0, height: 0, overflow: 'hidden' }}>
-          <NodeViewContent as="code" />
+          <NodeViewContent<'code'> as="code" />
         </div>
       </NodeViewWrapper>
     )
@@ -59,7 +59,7 @@ export function CodeBlockView({ node }: NodeViewProps): React.JSX.Element {
   return (
     <NodeViewWrapper>
       <pre data-language={language ?? undefined}>
-        <NodeViewContent as="code" className={language ? `language-${language}` : undefined} />
+        <NodeViewContent<'code'> as="code" className={language ? `language-${language}` : undefined} />
       </pre>
       {isMermaid && (
         <button className="mermaid-done-btn" onClick={(e) => { e.stopPropagation(); setIsEditing(false) }}>Done</button>
