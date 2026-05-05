@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type MouseEvent } from 'react'
 import { EditorView, basicSetup } from 'codemirror'
 import { EditorState } from '@codemirror/state'
 import { markdown } from '@codemirror/lang-markdown'
 import { oneDark } from '@codemirror/theme-one-dark'
+import { findUrlAtOffset } from '../../lib/links'
 
 interface SourceEditorProps {
   content: string
@@ -49,5 +50,20 @@ export function SourceEditor({ content, onChange, isDark }: SourceEditorProps): 
     }
   }, [content])
 
-  return <div ref={containerRef} className="source-editor" style={{ height: '100%' }} />
+  const handleClick = (e: MouseEvent<HTMLDivElement>): void => {
+    if (!e.ctrlKey && !e.metaKey) return
+    const view = viewRef.current
+    if (!view) return
+    const pos = view.posAtCoords({ x: e.clientX, y: e.clientY })
+    if (pos === null) return
+    const line = view.state.doc.lineAt(pos)
+    const offset = pos - line.from
+    const url = findUrlAtOffset(line.text, offset)
+    if (url) {
+      e.preventDefault()
+      window.api.openExternal(url)
+    }
+  }
+
+  return <div ref={containerRef} className="source-editor" style={{ height: '100%' }} onClick={handleClick} />
 }

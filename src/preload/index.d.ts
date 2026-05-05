@@ -15,6 +15,7 @@ declare global {
       setTheme: (override: 'system' | 'light' | 'dark') => Promise<boolean>
       onMenuAction: (callback: (action: string, payload?: string) => void) => () => void
       onThemeChange: (callback: (isDark: boolean) => void) => () => void
+      openExternal: (url: string) => Promise<void>
     }
   }
 }

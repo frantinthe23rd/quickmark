@@ -44,7 +44,10 @@ const api = {
   onThemeChange: (callback: (isDark: boolean) => void): (() => void) => {
     ipcRenderer.on('theme:changed', (_, isDark: boolean) => callback(isDark))
     return () => ipcRenderer.removeAllListeners('theme:changed')
-  }
+  },
+
+  openExternal: (url: string): Promise<void> =>
+    ipcRenderer.invoke('shell:open-external', url)
 }
 
 if (process.contextIsolated) {

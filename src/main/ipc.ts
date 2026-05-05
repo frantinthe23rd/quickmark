@@ -1,4 +1,4 @@
-import { ipcMain, dialog, BrowserWindow, nativeTheme } from 'electron'
+import { ipcMain, dialog, BrowserWindow, nativeTheme, shell } from 'electron'
 import { readFileSync, writeFileSync } from 'fs'
 import { addRecentFile, getRecentFiles, getThemeOverride, setThemeOverride } from './store'
 import { createMenu } from './menu'
@@ -109,5 +109,20 @@ export function registerIpcHandlers(): void {
     setThemeOverride(override)
     nativeTheme.themeSource = override
     return nativeTheme.shouldUseDarkColors
+  })
+
+  ipcMain.handle('shell:open-external', async (_event, url: string) => {
+    let parsed: URL
+    try {
+      parsed = new URL(url)
+    } catch {
+      return
+    }
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return
+    try {
+      await shell.openExternal(url)
+    } catch (err) {
+      console.error('shell.openExternal failed:', err)
+    }
   })
 }
