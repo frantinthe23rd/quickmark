@@ -1,3 +1,4 @@
+import React from 'react'
 import { Editor as TipTapEditor } from '@tiptap/react'
 import { WysiwygEditor } from './WysiwygEditor'
 import { SourceEditor } from './SourceEditor'
@@ -12,7 +13,7 @@ interface EditorProps {
   editorRef?: (editor: TipTapEditor | null) => void
 }
 
-export function Editor({ content, onChange, mode, editorRef }: EditorProps): JSX.Element {
+export function Editor({ content, onChange, mode, editorRef }: EditorProps): React.JSX.Element {
   const { isDark } = useTheme()
 
   return (

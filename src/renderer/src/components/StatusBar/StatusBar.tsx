@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { SaveStatus } from '../../types'
 import { wordCount, charCount } from '../../lib/markdown'
 import './StatusBar.css'
@@ -15,7 +15,7 @@ interface StatusBarProps {
   saveStatus: SaveStatus
 }
 
-export function StatusBar({ content, saveStatus }: StatusBarProps): JSX.Element {
+export function StatusBar({ content, saveStatus }: StatusBarProps): React.JSX.Element {
   const { words, chars } = useMemo(
     () => ({ words: wordCount(content), chars: charCount(content) }),
     [content]

@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { Editor } from '@tiptap/react'
 import { EditorMode, ThemeOverride } from '../../types'
 import { useTheme } from '../../context/ThemeContext'
@@ -72,7 +72,7 @@ const THEME_TITLES: Record<ThemeOverride, string> = {
 
 function Btn({ children, title, active, disabled, onClick }: {
   children: ReactNode; title: string; active?: boolean; disabled?: boolean; onClick: () => void
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <button
       className={`toolbar__btn ${active ? 'toolbar__btn--active' : ''}`}
@@ -83,11 +83,11 @@ function Btn({ children, title, active, disabled, onClick }: {
   )
 }
 
-function Divider(): JSX.Element {
+function Divider(): React.JSX.Element {
   return <div className="toolbar__divider" />
 }
 
-export function Toolbar({ editor, mode, onModeToggle }: ToolbarProps): JSX.Element {
+export function Toolbar({ editor, mode, onModeToggle }: ToolbarProps): React.JSX.Element {
   const [, setTick] = useState(0)
   useEffect(() => {
     if (!editor) return
@@ -99,7 +99,7 @@ export function Toolbar({ editor, mode, onModeToggle }: ToolbarProps): JSX.Eleme
   const wysiwyg = mode === 'wysiwyg'
   const disabled = !editor || !wysiwyg
 
-  const btns = (actions: FormatAction[]): JSX.Element[] =>
+  const btns = (actions: FormatAction[]): React.JSX.Element[] =>
     actions.map(({ icon, title, action, isActive }, i) => (
       <Btn
         key={i}

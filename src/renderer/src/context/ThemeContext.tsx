@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react'
+import React, { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react'
 import { ThemeOverride } from '../types'
 
 interface ThemeContextValue {
@@ -13,7 +13,7 @@ const ThemeContext = createContext<ThemeContextValue>({
   setOverride: async () => {}
 })
 
-export function ThemeProvider({ children }: { children: ReactNode }): JSX.Element {
+export function ThemeProvider({ children }: { children: ReactNode }): React.JSX.Element {
   const [isDark, setIsDark] = useState(false)
   const [override, setOverrideState] = useState<ThemeOverride>('system')
 

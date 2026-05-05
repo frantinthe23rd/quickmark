@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { NodeViewWrapper, NodeViewContent } from '@tiptap/react'
 import type { NodeViewProps } from '@tiptap/react'
 import mermaid from 'mermaid'
@@ -9,7 +9,7 @@ interface MermaidDiagramProps {
   code: string
 }
 
-export function MermaidDiagram({ code }: MermaidDiagramProps): JSX.Element {
+export function MermaidDiagram({ code }: MermaidDiagramProps): React.JSX.Element {
   const [svg, setSvg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -36,7 +36,7 @@ export function MermaidDiagram({ code }: MermaidDiagramProps): JSX.Element {
   return <div dangerouslySetInnerHTML={{ __html: svg }} />
 }
 
-export function CodeBlockView({ node }: NodeViewProps): JSX.Element {
+export function CodeBlockView({ node }: NodeViewProps): React.JSX.Element {
   const [isEditing, setIsEditing] = useState(false)
   const language = node.attrs.language as string | null
   const isMermaid = language === 'mermaid'

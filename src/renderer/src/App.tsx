@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { Editor as TipTapEditor } from '@tiptap/react'
 import { ThemeProvider } from './context/ThemeContext'
 import { TabBar } from './components/TabBar/TabBar'
@@ -11,7 +11,7 @@ import { EditorMode, SaveStatus } from './types'
 import './App.css'
 import './styles/themes.css'
 
-function AppInner(): JSX.Element {
+function AppInner(): React.JSX.Element {
   const {
     tabs, activeTabId, activeTab,
     openTab, newTab, closeTab, setActiveTab, updateContent, markSaved
@@ -127,7 +127,7 @@ function AppInner(): JSX.Element {
   )
 }
 
-export default function App(): JSX.Element {
+export default function App(): React.JSX.Element {
   return (
     <ThemeProvider>
       <AppInner />

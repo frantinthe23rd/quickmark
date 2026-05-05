@@ -1,4 +1,4 @@
-import { useEffect, useRef, type MouseEvent } from 'react'
+import React, { useEffect, useRef, type MouseEvent } from 'react'
 import { EditorView, basicSetup } from 'codemirror'
 import { EditorState } from '@codemirror/state'
 import { markdown } from '@codemirror/lang-markdown'
@@ -11,7 +11,7 @@ interface SourceEditorProps {
   isDark: boolean
 }
 
-export function SourceEditor({ content, onChange, isDark }: SourceEditorProps): JSX.Element {
+export function SourceEditor({ content, onChange, isDark }: SourceEditorProps): React.JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
 

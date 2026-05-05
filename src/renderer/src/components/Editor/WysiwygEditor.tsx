@@ -1,4 +1,4 @@
-import { useEffect, type MouseEvent } from 'react'
+import React, { useEffect, type MouseEvent } from 'react'
 import { useEditor, EditorContent, Editor, ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
@@ -33,7 +33,7 @@ interface WysiwygEditorProps {
   editorRef?: (editor: Editor | null) => void
 }
 
-export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorProps): JSX.Element {
+export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorProps): React.JSX.Element {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({ codeBlock: false }),

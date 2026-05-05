@@ -1,3 +1,4 @@
+import React from 'react'
 import { Tab } from '../../types'
 import './TabBar.css'
 
@@ -9,7 +10,7 @@ interface TabBarProps {
   onNew: () => void
 }
 
-export function TabBar({ tabs, activeTabId, onSelect, onClose, onNew }: TabBarProps): JSX.Element {
+export function TabBar({ tabs, activeTabId, onSelect, onClose, onNew }: TabBarProps): React.JSX.Element {
   return (
     <div className="tab-bar" role="tablist">
       {tabs.map(tab => (
