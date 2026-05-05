@@ -6,7 +6,6 @@
     "src/preload/**/*"
   ],
   "compilerOptions": {
-    "composite": true,
-    "types": ["electron-vite/node"]
+    "composite": true
   }
 }

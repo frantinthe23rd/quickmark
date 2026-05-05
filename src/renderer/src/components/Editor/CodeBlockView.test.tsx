@@ -25,6 +25,7 @@ describe('MermaidDiagram', () => {
   it('renders SVG markup when mermaid resolves', async () => {
     vi.mocked(mermaid.render).mockResolvedValue({
       svg: '<svg><circle r="5"/></svg>',
+      diagramType: 'flowchart',
       bindFunctions: undefined as never
     })
     const { container } = render(<MermaidDiagram code="graph TD; A-->B" />)
