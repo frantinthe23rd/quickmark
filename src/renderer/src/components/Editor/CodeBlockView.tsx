@@ -3,7 +3,7 @@ import { NodeViewWrapper, NodeViewContent } from '@tiptap/react'
 import type { NodeViewProps } from '@tiptap/react'
 import mermaid from 'mermaid'
 
-mermaid.initialize({ startOnLoad: false, theme: 'dark' })
+mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'strict' })
 
 interface MermaidDiagramProps {
   code: string

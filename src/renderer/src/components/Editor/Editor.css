@@ -119,7 +119,8 @@
   cursor: pointer;
 }
 
-.mermaid-block:hover .mermaid-edit-btn {
+.mermaid-block:hover .mermaid-edit-btn,
+.mermaid-edit-btn:focus-visible {
   opacity: 1;
 }
 
