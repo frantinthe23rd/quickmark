@@ -11,6 +11,9 @@ import 'highlight.js/styles/github-dark.css'
 
 const lowlight = createLowlight(all)
 
+const mdStorage = (e: Editor) =>
+  (e.storage as unknown as { markdown: MarkdownStorage }).markdown
+
 const EnhancedCodeBlock = CodeBlockLowlight
   .configure({ lowlight })
   .extend({ addNodeView: () => ReactNodeViewRenderer(CodeBlockView) })
@@ -44,7 +47,7 @@ export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorPro
     ],
     content,
     onUpdate({ editor }) {
-      onChange((editor.storage as unknown as { markdown: MarkdownStorage }).markdown.getMarkdown())
+      onChange(mdStorage(editor).getMarkdown())
     }
   })
 
@@ -55,7 +58,7 @@ export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorPro
 
   useEffect(() => {
     if (!editor) return
-    const current = (editor.storage as unknown as { markdown: MarkdownStorage }).markdown.getMarkdown()
+    const current = mdStorage(editor).getMarkdown()
     if (current !== content) {
       editor.commands.setContent(content)
     }
