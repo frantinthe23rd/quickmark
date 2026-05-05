@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, type MouseEvent } from 'react'
 import { useEditor, EditorContent, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
@@ -51,8 +51,17 @@ export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorPro
     // eslint-disable-next-line react-hooks/exhaustive-deps -- editor dep intentionally omitted: adding it fires on init, not just tab switch
   }, [content])
 
+  const handleClick = (e: MouseEvent<HTMLDivElement>): void => {
+    if (!e.ctrlKey && !e.metaKey) return
+    const anchor = (e.target as Element).closest('a[href]') as HTMLAnchorElement | null
+    if (anchor?.href) {
+      e.preventDefault()
+      window.api.openExternal(anchor.href)
+    }
+  }
+
   return (
-    <div className="wysiwyg-editor">
+    <div className="wysiwyg-editor" onClick={handleClick}>
       <EditorContent editor={editor} />
     </div>
   )
