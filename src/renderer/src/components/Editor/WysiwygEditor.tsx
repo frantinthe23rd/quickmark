@@ -1,9 +1,19 @@
 import { useEffect, type MouseEvent } from 'react'
-import { useEditor, EditorContent, Editor } from '@tiptap/react'
+import { useEditor, EditorContent, Editor, ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { all, createLowlight } from 'lowlight'
 import { Markdown } from 'tiptap-markdown'
 import { Extension } from '@tiptap/core'
+import { CodeBlockView } from './CodeBlockView'
+import 'highlight.js/styles/github-dark.css'
+
+const lowlight = createLowlight(all)
+
+const EnhancedCodeBlock = CodeBlockLowlight
+  .configure({ lowlight })
+  .extend({ addNodeView: () => ReactNodeViewRenderer(CodeBlockView) })
 
 const KeyboardOverrides = Extension.create({
   name: 'keyboardOverrides',
@@ -26,8 +36,9 @@ interface WysiwygEditorProps {
 export function WysiwygEditor({ content, onChange, editorRef }: WysiwygEditorProps): JSX.Element {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({ codeBlock: false }),
       KeyboardOverrides,
+      EnhancedCodeBlock,
       Link.configure({ openOnClick: false }),
       Markdown.configure({ html: false, transformCopiedText: true })
     ],
