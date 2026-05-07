@@ -6,8 +6,13 @@ declare global {
     api: {
       openFile: () => Promise<{ path: string; content: string } | null>
       openFilePath: (path: string) => Promise<{ path: string; content: string } | null>
-      saveFile: (path: string, content: string) => Promise<void>
+      saveFile: (
+        path: string,
+        content: string,
+        options?: { requireExisting?: boolean }
+      ) => Promise<{ ok: true } | { ok: false; reason: 'missing' }>
       saveFileAs: (content: string) => Promise<string | null>
+      setAutoSave: (enabled: boolean) => Promise<void>
       getRecentFiles: () => Promise<string[]>
       exportPdf: (html: string) => Promise<void>
       exportHtml: (html: string) => Promise<void>

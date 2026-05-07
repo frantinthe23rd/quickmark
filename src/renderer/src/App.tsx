@@ -19,8 +19,13 @@ function AppInner(): React.JSX.Element {
 
   const [mode, setMode] = useState<EditorMode>('wysiwyg')
   const [saveStatuses, setSaveStatuses] = useState<Record<string, SaveStatus>>({})
-  const [autoSaveEnabled, setAutoSaveEnabled] = useState(true)
+  const [autoSaveEnabled, setAutoSaveEnabledState] = useState(false)
   const [tiptapEditor, setTiptapEditor] = useState<TipTapEditor | null>(null)
+
+  const setAutoSaveEnabled = useCallback((enabled: boolean) => {
+    setAutoSaveEnabledState(enabled)
+    window.api.setAutoSave(enabled)
+  }, [])
 
   const resolveStatus = (tabId: string): SaveStatus => {
     if (saveStatuses[tabId]) return saveStatuses[tabId]
@@ -33,19 +38,24 @@ function AppInner(): React.JSX.Element {
     setSaveStatuses(s => ({ ...s, [id]: 'saved' }))
   }, [markSaved])
 
+  const onAutoSaveMissing = useCallback((tabId: string, filePath: string) => {
+    console.warn(`[QuickMark] Skipping auto-save: ${filePath} no longer exists.`)
+    setSaveStatuses(s => ({ ...s, [tabId]: 'modified' }))
+  }, [])
+
   const { scheduleAutoSave, openFile, openFilePath, saveFile, saveFileAs } = useFile({
     openTab,
-    markSaved: onMarkSaved
+    markSaved: onMarkSaved,
+    onAutoSaveMissing
   })
 
   const handleContentChange = useCallback((content: string) => {
     if (!activeTab) return
+    if (content === activeTab.content) return
     updateContent(activeTab.id, content)
-    if (activeTab.filePath) {
+    if (activeTab.filePath && autoSaveEnabled) {
       setSaveStatuses(s => ({ ...s, [activeTab.id]: 'saving' }))
-      if (autoSaveEnabled) {
-        scheduleAutoSave(activeTab.filePath, content, activeTab.id)
-      }
+      scheduleAutoSave(activeTab.filePath, content, activeTab.id)
     }
   }, [activeTab, updateContent, scheduleAutoSave, autoSaveEnabled])
 
@@ -81,7 +91,7 @@ function AppInner(): React.JSX.Element {
       else if (action === 'exportPdf') await handleExportPdf()
       else if (action === 'exportHtml') await handleExportHtml()
       else if (action === 'print') window.print()
-      else if (action === 'toggleAutoSave') setAutoSaveEnabled(payload === 'true')
+      else if (action === 'toggleAutoSave') setAutoSaveEnabledState(payload === 'true')
     })
     return cleanup
   }, [newTab, openFile, openFilePath, handleSave, handleSaveAs, handleExportPdf, handleExportHtml])
@@ -110,6 +120,8 @@ function AppInner(): React.JSX.Element {
         editor={tiptapEditor}
         mode={mode}
         onModeToggle={toggleMode}
+        autoSaveEnabled={autoSaveEnabled}
+        onAutoSaveToggle={() => setAutoSaveEnabled(!autoSaveEnabled)}
       />
       {activeTab && (
         <Editor

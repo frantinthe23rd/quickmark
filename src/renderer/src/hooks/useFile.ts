@@ -4,6 +4,7 @@ import { Tab } from '../types'
 interface UseFileOptions {
   openTab: (file: { path: string; content: string }) => void
   markSaved: (id: string, filePath: string) => void
+  onAutoSaveMissing?: (tabId: string, filePath: string) => void
 }
 
 export interface UseFileApi {
@@ -14,7 +15,7 @@ export interface UseFileApi {
   saveFileAs: (tab: Tab) => Promise<string | null>
 }
 
-export function useFile({ openTab, markSaved }: UseFileOptions): UseFileApi {
+export function useFile({ openTab, markSaved, onAutoSaveMissing }: UseFileOptions): UseFileApi {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -28,12 +29,15 @@ export function useFile({ openTab, markSaved }: UseFileOptions): UseFileApi {
       if (timerRef.current) clearTimeout(timerRef.current)
       if (!filePath) return
       timerRef.current = setTimeout(() => {
-        window.api.saveFile(filePath, content)
-          .then(() => { markSaved(tabId, filePath) })
+        window.api.saveFile(filePath, content, { requireExisting: true })
+          .then((result) => {
+            if (result.ok) markSaved(tabId, filePath)
+            else if (result.reason === 'missing') onAutoSaveMissing?.(tabId, filePath)
+          })
           .catch((err) => console.error('[useFile] Auto-save failed:', err))
       }, 2000)
     },
-    [markSaved]
+    [markSaved, onAutoSaveMissing]
   )
 
   const openFile = useCallback(async () => {

@@ -3,10 +3,22 @@ import { is } from '@electron-toolkit/utils'
 import { getRecentFiles } from './store'
 import { checkForUpdates } from './updater'
 
-let autoSaveEnabled = true
+let autoSaveEnabled = false
+
+export function setAutoSaveEnabled(enabled: boolean): void {
+  if (autoSaveEnabled === enabled) return
+  autoSaveEnabled = enabled
+  createMenu()
+}
 
 function send(channel: string, payload?: string): void {
   BrowserWindow.getFocusedWindow()?.webContents.send(channel, payload)
+}
+
+function broadcastAutoSave(): void {
+  BrowserWindow.getAllWindows().forEach(w =>
+    w.webContents.send('menu:toggleAutoSave', autoSaveEnabled)
+  )
 }
 
 export function createMenu(): void {
@@ -56,7 +68,7 @@ export function createMenu(): void {
           checked: autoSaveEnabled,
           click: (item) => {
             autoSaveEnabled = item.checked
-            BrowserWindow.getFocusedWindow()?.webContents.send('menu:toggleAutoSave', item.checked)
+            broadcastAutoSave()
           }
         }
       ]
