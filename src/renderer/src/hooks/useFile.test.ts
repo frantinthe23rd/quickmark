@@ -25,7 +25,7 @@ describe('useFile auto-save', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     vi.useFakeTimers()
-    mockApi.saveFile.mockResolvedValue(undefined)
+    mockApi.saveFile.mockResolvedValue({ ok: true })
   })
 
   afterEach(() => vi.useRealTimers())
@@ -35,7 +35,7 @@ describe('useFile auto-save', () => {
     act(() => result.current.scheduleAutoSave('/path/file.md', 'hello', 'tab-1'))
     expect(mockApi.saveFile).not.toHaveBeenCalled()
     await act(async () => { vi.advanceTimersByTime(2000) })
-    expect(mockApi.saveFile).toHaveBeenCalledWith('/path/file.md', 'hello')
+    expect(mockApi.saveFile).toHaveBeenCalledWith('/path/file.md', 'hello', { requireExisting: true })
     expect(markSaved).toHaveBeenCalledWith('tab-1', '/path/file.md')
   })
 
@@ -55,6 +55,16 @@ describe('useFile auto-save', () => {
     expect(mockApi.saveFile).not.toHaveBeenCalled()
     await act(async () => { vi.advanceTimersByTime(500) })
     expect(mockApi.saveFile).toHaveBeenCalledTimes(1)
-    expect(mockApi.saveFile).toHaveBeenCalledWith('/file.md', 'v2')
+    expect(mockApi.saveFile).toHaveBeenCalledWith('/file.md', 'v2', { requireExisting: true })
+  })
+
+  it('does not mark saved and notifies when the underlying file is missing', async () => {
+    const onAutoSaveMissing = vi.fn()
+    mockApi.saveFile.mockResolvedValueOnce({ ok: false, reason: 'missing' })
+    const { result } = renderHook(() => useFile({ openTab, markSaved, onAutoSaveMissing }))
+    act(() => result.current.scheduleAutoSave('/gone.md', 'hi', 'tab-1'))
+    await act(async () => { vi.advanceTimersByTime(2000) })
+    expect(markSaved).not.toHaveBeenCalled()
+    expect(onAutoSaveMissing).toHaveBeenCalledWith('tab-1', '/gone.md')
   })
 })

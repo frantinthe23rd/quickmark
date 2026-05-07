@@ -8,7 +8,7 @@ import {
   IconBullet, IconOrdered, IconQuote, IconIndent, IconOutdent,
   IconCodeBlock, IconRule, IconLink,
   IconSystem, IconMoon, IconSun,
-  IconSource, IconWysiwyg
+  IconSource, IconWysiwyg, IconAutoSave
 } from './icons'
 import './Toolbar.css'
 
@@ -16,6 +16,8 @@ interface ToolbarProps {
   editor: Editor | null
   mode: EditorMode
   onModeToggle: () => void
+  autoSaveEnabled: boolean
+  onAutoSaveToggle: () => void
 }
 
 interface FormatAction {
@@ -87,7 +89,9 @@ function Divider(): React.JSX.Element {
   return <div className="toolbar__divider" />
 }
 
-export function Toolbar({ editor, mode, onModeToggle }: ToolbarProps): React.JSX.Element {
+export function Toolbar({
+  editor, mode, onModeToggle, autoSaveEnabled, onAutoSaveToggle
+}: ToolbarProps): React.JSX.Element {
   const [, setTick] = useState(0)
   useEffect(() => {
     if (!editor) return
@@ -120,6 +124,13 @@ export function Toolbar({ editor, mode, onModeToggle }: ToolbarProps): React.JSX
       <Divider />
       {btns(INSERTS)}
       <div className="toolbar__spacer" />
+      <Btn
+        title={autoSaveEnabled ? 'Auto-save: on (click to disable)' : 'Auto-save: off (click to enable)'}
+        active={autoSaveEnabled}
+        onClick={onAutoSaveToggle}
+      >
+        <IconAutoSave />
+      </Btn>
       <Btn title={THEME_TITLES[override]} onClick={() => setOverride(THEME_CYCLE[override])}>
         {THEME_ICONS[override]}
       </Btn>

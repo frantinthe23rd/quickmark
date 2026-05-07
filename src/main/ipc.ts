@@ -1,7 +1,7 @@
 import { ipcMain, dialog, BrowserWindow, nativeTheme, shell } from 'electron'
-import { readFileSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { addRecentFile, getRecentFiles, getThemeOverride, setThemeOverride } from './store'
-import { createMenu } from './menu'
+import { createMenu, setAutoSaveEnabled } from './menu'
 
 export function registerIpcHandlers(): void {
   ipcMain.handle('file:open', async () => {
@@ -29,13 +29,24 @@ export function registerIpcHandlers(): void {
     }
   })
 
-  ipcMain.handle('file:save', (_event, { path, content }: { path: string; content: string }) => {
+  ipcMain.handle('file:save', (
+    _event,
+    { path, content, requireExisting }: { path: string; content: string; requireExisting?: boolean }
+  ) => {
+    if (requireExisting && !existsSync(path)) {
+      return { ok: false, reason: 'missing' as const }
+    }
     try {
       writeFileSync(path, content, 'utf-8')
+      return { ok: true as const }
     } catch (err) {
       console.error('Save failed:', err)
       throw err
     }
+  })
+
+  ipcMain.handle('autosave:set', (_event, enabled: boolean) => {
+    setAutoSaveEnabled(enabled)
   })
 
   ipcMain.handle('file:saveAs', async (_event, content: string) => {

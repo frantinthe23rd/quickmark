@@ -8,8 +8,15 @@ const api = {
   openFilePath: (path: string): Promise<{ path: string; content: string } | null> =>
     ipcRenderer.invoke('file:open-path', path),
 
-  saveFile: (path: string, content: string): Promise<void> =>
-    ipcRenderer.invoke('file:save', { path, content }),
+  saveFile: (
+    path: string,
+    content: string,
+    options?: { requireExisting?: boolean }
+  ): Promise<{ ok: true } | { ok: false; reason: 'missing' }> =>
+    ipcRenderer.invoke('file:save', { path, content, requireExisting: options?.requireExisting }),
+
+  setAutoSave: (enabled: boolean): Promise<void> =>
+    ipcRenderer.invoke('autosave:set', enabled),
 
   saveFileAs: (content: string): Promise<string | null> =>
     ipcRenderer.invoke('file:saveAs', content),
@@ -33,7 +40,7 @@ const api = {
     const actions = ['new', 'open', 'save', 'saveAs', 'exportPdf', 'exportHtml', 'print']
     actions.forEach(action => ipcRenderer.on(`menu:${action}`, () => callback(action)))
     ipcRenderer.on('menu:openPath', (_, path: string) => callback('openPath', path))
-    ipcRenderer.on('menu:toggleAutoSave', (_, enabled: boolean) => callback('toggleAutoSave', String(enabled)))
+    ipcRenderer.on('menu:toggleAutoSave', (_, enabled: boolean) => callback('toggleAutoSave', enabled ? 'true' : 'false'))
     return () => {
       actions.forEach(action => ipcRenderer.removeAllListeners(`menu:${action}`))
       ipcRenderer.removeAllListeners('menu:openPath')
